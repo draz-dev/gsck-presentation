@@ -323,6 +323,7 @@ function init() {
     center: true,
     hash: false,
     transition: 'fade',
+    transitionSpeed: 'fast',
     plugins: [ RevealNotes ]
   });
 

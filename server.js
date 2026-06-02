@@ -41,6 +41,15 @@ io.on("connection", (socket) => {
   });
 });
 
+// Explicitly handle specific routes
+app.get('/presenter', (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'presenter.html'));
+});
+
+app.get('/display', (req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'display.html'));
+});
+
 // Explicitly avoid wildcard app.get("*") to prevent Express 5 routing crashes
 app.use((req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));

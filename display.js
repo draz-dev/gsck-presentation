@@ -59,8 +59,8 @@ function playInnerAnimations(slide) {
       x: 0,
       y: 0,
       scale: 1,
-      duration: 0.75,
-      stagger: 0.12,
+      duration: 0.4,
+      stagger: 0.08,
       ease: 'power3.out',
       clearProps: 'transform'
     });
@@ -100,7 +100,8 @@ function init() {
     disableLayout: true,
     width: 1920,
     height: 1080,
-    transition: 'fade'
+    transition: 'fade',
+    transitionSpeed: 'fast'
   }).then(() => {
     console.log('[Audience View] Reveal initialized');
   });
