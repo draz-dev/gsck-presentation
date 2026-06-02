@@ -17,64 +17,27 @@ socket.on("connect_error", (err) => {
 });
 
 // Audio management state
+// Audio management state (Silent Presenter control)
 let isMuted = false;
-const audioCache = {};
+let guttila1Playing = false;
+let guttila2Playing = false;
+let slide13Playing = false;
 
-const allAudioPaths = [
-  '/assets/Sounds/Slide 02 Audio.mp3',
-  '/assets/Sounds/Slide 03 Audio.mp3',
-  '/assets/Sounds/Slide 06 Audio.mp3',
-  '/assets/Sounds/Slide 09 Audio 01 Guttila.mp3',
-  '/assets/Sounds/Slide 09 Audio 02 Guttila.mp3',
-  '/assets/Sounds/slide 13 audio.mp3'
-];
-
-function preloadAllAudio() {
-  allAudioPaths.forEach(path => {
-    try {
-      const encoded = encodeURI(path);
-      const audio = new Audio(encoded);
-      audio.preload = 'auto';
-      audio.muted = isMuted;
-      audio.load();
-      audioCache[path] = audio;
-      console.log(`[Presenter Audio] Preloaded: ${path}`);
-    } catch (err) {
-      console.error(`[Presenter Audio] Preload failed: ${path}`, err);
-    }
-  });
-}
-
-let guttilaAudio1, guttilaAudio2, slide13Audio;
-
-function setupAudioInstances() {
-  guttilaAudio1 = audioCache['/assets/Sounds/Slide 09 Audio 01 Guttila.mp3'] || new Audio(encodeURI('/assets/Sounds/Slide 09 Audio 01 Guttila.mp3'));
-  guttilaAudio2 = audioCache['/assets/Sounds/Slide 09 Audio 02 Guttila.mp3'] || new Audio(encodeURI('/assets/Sounds/Slide 09 Audio 02 Guttila.mp3'));
-  slide13Audio = audioCache['/assets/Sounds/slide 13 audio.mp3'] || new Audio(encodeURI('/assets/Sounds/slide 13 audio.mp3'));
-}
-
-let currentBgAudio = null;
-let currentAudio = null;
-
-function playAudio(audio) {
+function playAudio(track) {
   stopAll();
-  currentAudio = audio;
-  if (currentAudio) {
-    currentAudio.muted = isMuted;
-    currentAudio.play().catch(e => console.warn('[Presenter Audio] Playback blocked:', e));
-  }
+  if (track === 'guttila1') guttila1Playing = true;
+  else if (track === 'guttila2') guttila2Playing = true;
+  else if (track === 'slide13') slide13Playing = true;
+
+  console.log(`[Presenter Audio] Emitting play track: ${track}`);
+  socket.emit("audio-control", { action: "play", track: track });
   updateAudioButtonStates();
 }
 
 function stopAll() {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-  }
-  if (guttilaAudio1) { guttilaAudio1.pause(); guttilaAudio1.currentTime = 0; }
-  if (guttilaAudio2) { guttilaAudio2.pause(); guttilaAudio2.currentTime = 0; }
-  if (slide13Audio) { slide13Audio.pause(); slide13Audio.currentTime = 0; }
-  if (currentBgAudio) { currentBgAudio.pause(); currentBgAudio.currentTime = 0; currentBgAudio = null; }
+  guttila1Playing = false;
+  guttila2Playing = false;
+  slide13Playing = false;
   updateAudioButtonStates();
 }
 
@@ -85,17 +48,17 @@ function updateAudioButtonStates() {
   const labelG = document.getElementById('guttila-audio-status');
   const labelS13 = document.getElementById('slide13-audio-status');
 
-  if (btnG1) btnG1.innerHTML = guttilaAudio1 && !guttilaAudio1.paused ? '◼ Stop 1' : '▶ Play 1';
-  if (btnG2) btnG2.innerHTML = guttilaAudio2 && !guttilaAudio2.paused ? '◼ Stop 2' : '▶ Play 2';
-  if (btnS13) btnS13.innerHTML = slide13Audio && !slide13Audio.paused ? '◼ Stop Track' : '▶ Play Track';
+  if (btnG1) btnG1.innerHTML = guttila1Playing ? '◼ Stop 1' : '▶ Play 1';
+  if (btnG2) btnG2.innerHTML = guttila2Playing ? '◼ Stop 2' : '▶ Play 2';
+  if (btnS13) btnS13.innerHTML = slide13Playing ? '◼ Stop Track' : '▶ Play Track';
 
   let gStatus = 'Stopped';
-  if (guttilaAudio1 && !guttilaAudio1.paused) gStatus = 'Playing Audio 1';
-  if (guttilaAudio2 && !guttilaAudio2.paused) gStatus = 'Playing Audio 2';
+  if (guttila1Playing) gStatus = 'Playing Audio 1';
+  if (guttila2Playing) gStatus = 'Playing Audio 2';
   if (labelG) labelG.textContent = gStatus;
 
   if (labelS13) {
-    labelS13.textContent = slide13Audio && !slide13Audio.paused ? 'Playing' : 'Stopped';
+    labelS13.textContent = slide13Playing ? 'Playing' : 'Stopped';
   }
 }
 
@@ -146,7 +109,13 @@ function broadcastState() {
 
 // Dedicated trigger functions for buttons
 function nextSlide() {
-  Reveal.next();
+  const indices = Reveal.getIndices();
+  const total = Reveal.getTotalSlides();
+  if (indices.h === total - 1) {
+    Reveal.slide(0);
+  } else {
+    Reveal.next();
+  }
   broadcastState();
 }
 
@@ -212,6 +181,18 @@ function updatePresenterConsole(currentSlide) {
           el.style.opacity = '1';
           el.style.transform = 'none';
         });
+
+        // Ensure video is visible in the preview by resolving its source and calling load()
+        const previewVideo = clone.querySelector('video');
+        if (previewVideo) {
+          if (!previewVideo.src && previewVideo.dataset.src) {
+            previewVideo.src = previewVideo.dataset.src;
+          }
+          previewVideo.muted = true;
+          previewVideo.preload = 'auto';
+          previewVideo.load();
+        }
+
         nextStage.innerHTML = '';
         nextStage.appendChild(clone);
       }
@@ -272,12 +253,6 @@ function playInnerAnimations(slide) {
 function init() {
   console.log('[Presenter Console] Initializing...');
 
-  // Defer audio preloading so it doesn't block the initial page load
-  setTimeout(() => {
-    preloadAllAudio();
-    setupAudioInstances();
-  }, 1000);
-
   startTimer();
 
   // Setup local Reveal events
@@ -286,15 +261,7 @@ function init() {
     
     playInnerAnimations(event.currentSlide);
     stopAll();
-
-    // Check if background slide audio exists
-    const audioSrc = event.currentSlide.getAttribute('data-audio');
-    if (audioSrc) {
-      const cached = audioCache[audioSrc] || new Audio(encodeURI(audioSrc));
-      currentBgAudio = cached;
-      currentBgAudio.muted = isMuted;
-      currentBgAudio.play().catch(e => console.warn('[Presenter Audio] Background play blocked:', e));
-    }
+    socket.emit("audio-control", { action: "stopAll" });
 
     updatePresenterConsole(event.currentSlide);
     broadcastState();
@@ -375,42 +342,36 @@ function init() {
   document.getElementById('btn-mute')?.addEventListener('click', (e) => {
     isMuted = !isMuted;
     e.currentTarget.textContent = isMuted ? '🔇 Muted' : '🔊 Unmuted';
-    allAudioPaths.forEach(path => {
-      if (audioCache[path]) {
-        audioCache[path].muted = isMuted;
-      }
-    });
-    if (guttilaAudio1) guttilaAudio1.muted = isMuted;
-    if (guttilaAudio2) guttilaAudio2.muted = isMuted;
-    if (slide13Audio) slide13Audio.muted = isMuted;
-    if (currentBgAudio) currentBgAudio.muted = isMuted;
-    if (currentAudio) currentAudio.muted = isMuted;
+    socket.emit("audio-control", { action: "mute", value: isMuted });
   });
 
   // Guttila Audio buttons event setup
   document.getElementById('btn-audio-guttila1')?.addEventListener('click', () => {
-    if (guttilaAudio1.paused) {
-      playAudio(guttilaAudio1);
+    if (!guttila1Playing) {
+      playAudio('guttila1');
     } else {
-      guttilaAudio1.pause();
+      guttila1Playing = false;
+      socket.emit("audio-control", { action: "stop", track: "guttila1" });
       updateAudioButtonStates();
     }
   });
 
   document.getElementById('btn-audio-guttila2')?.addEventListener('click', () => {
-    if (guttilaAudio2.paused) {
-      playAudio(guttilaAudio2);
+    if (!guttila2Playing) {
+      playAudio('guttila2');
     } else {
-      guttilaAudio2.pause();
+      guttila2Playing = false;
+      socket.emit("audio-control", { action: "stop", track: "guttila2" });
       updateAudioButtonStates();
     }
   });
 
   document.getElementById('btn-audio-slide13')?.addEventListener('click', () => {
-    if (slide13Audio.paused) {
-      playAudio(slide13Audio);
+    if (!slide13Playing) {
+      playAudio('slide13');
     } else {
-      slide13Audio.pause();
+      slide13Playing = false;
+      socket.emit("audio-control", { action: "stop", track: "slide13" });
       updateAudioButtonStates();
     }
   });

@@ -37,7 +37,7 @@
           </div>
         </div>
         <div id="slide-counter" class="text-[13px] font-medium tracking-tight text-[#a1a1aa] bg-white/[0.04] px-3 py-1.5 rounded-md border border-white/[0.06]">
-          Slide <span id="current-slide-num" class="text-[#ededed]">1</span> of <span id="total-slide-num" class="text-[#a1a1aa]">15</span>
+          Slide <span id="current-slide-num" class="text-[#ededed]">1</span> of <span id="total-slide-num" class="text-[#a1a1aa]">17</span>
         </div>
       </div>
     </header>
@@ -160,17 +160,33 @@
 
             <!-- Slide 14 -->
             <section data-slide="14">
-              <aside class="notes">Reflect on the collective works of classical creators.</aside>
+              <aside class="notes">Memos video playback. Audio plays from the main display.</aside>
               <div class="slide-canvas">
-                <img src="/assets/13.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 14" loading="lazy" onerror="this.style.display='none'">
+                <video data-src="/assets/memos.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
               </div>
             </section>
 
             <!-- Slide 15 -->
             <section data-slide="15">
+              <aside class="notes">Reflect on the collective works of classical creators.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/13.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 15" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 16 -->
+            <section data-slide="16">
               <aside class="notes">Conclusion and thanks. Allow questions and handle callbacks.</aside>
               <div class="slide-canvas">
                 <video data-src="/assets/15.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
+              </div>
+            </section>
+
+            <!-- Slide 17 -->
+            <section data-slide="17" data-audio="/assets/anthemaudio.mpeg">
+              <aside class="notes">National Anthem. Please stand.</aside>
+              <div class="slide-canvas">
+                <video data-src="/assets/srilanka.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
               </div>
             </section>
 

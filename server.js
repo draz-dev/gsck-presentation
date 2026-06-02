@@ -39,6 +39,10 @@ io.on("connection", (socket) => {
   socket.on("getCurrentState", () => {
     socket.emit("stateUpdate", state);
   });
+
+  socket.on("audio-control", (data) => {
+    socket.broadcast.emit("audio-control", data);
+  });
 });
 
 // Explicitly handle specific routes
