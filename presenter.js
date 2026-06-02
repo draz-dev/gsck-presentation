@@ -272,8 +272,12 @@ function playInnerAnimations(slide) {
 function init() {
   console.log('[Presenter Console] Initializing...');
 
-  preloadAllAudio();
-  setupAudioInstances();
+  // Defer audio preloading so it doesn't block the initial page load
+  setTimeout(() => {
+    preloadAllAudio();
+    setupAudioInstances();
+  }, 1000);
+
   startTimer();
 
   // Setup local Reveal events
