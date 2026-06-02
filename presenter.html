@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#0a0a0f]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerPoint Presenter View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.ico" />
+</head>
+<body class="h-full bg-[#0a0a0f] text-white font-sans selection:bg-indigo-500/30 selection:text-white select-none">
+
+  <!-- Presenter Dashboard Layout -->
+  <div class="h-screen w-screen grid grid-cols-12 grid-rows-6 p-4 gap-4 overflow-hidden box-border">
+    
+    <!-- Row 1: Header / Status Bar -->
+    <header class="col-span-12 row-span-1 bg-[#12121e]/80 border border-white/5 rounded-2xl flex items-center justify-between px-6 backdrop-blur-xl">
+      <div class="flex items-center gap-3">
+        <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></div>
+        <span class="text-sm font-semibold tracking-wider uppercase text-zinc-400">Presenter Console</span>
+        <span id="connection-status" class="text-[10px] text-zinc-500 font-mono">Connecting...</span>
+      </div>
+      <!-- Timer & Slide Counter Dashboard -->
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-3 bg-black/40 border border-white/5 rounded-full px-5 py-1.5">
+          <span class="text-xs text-zinc-400 font-medium">ELAPSED:</span>
+          <span id="timer-display" class="font-mono text-lg font-bold text-indigo-400">00:00:00</span>
+          <div class="flex gap-1.5 ml-2">
+            <button id="btn-timer-toggle" class="p-1 hover:bg-white/10 rounded-full transition" title="Play/Pause Timer">
+              <svg class="w-3.5 h-3.5 text-zinc-400" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2A1 1 0 007 8z"/></svg>
+            </button>
+            <button id="btn-timer-reset" class="p-1 hover:bg-white/10 rounded-full transition" title="Reset Timer">
+              <svg class="w-3.5 h-3.5 text-zinc-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.005a1 1 0 01.992-.995 1 1 0 01.995.992 5.002 5.002 0 008.005 1.302H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="slide-counter" class="text-sm font-semibold tracking-wide text-zinc-300">
+          Slide <span id="current-slide-num" class="text-indigo-400">1</span> of <span id="total-slide-num" class="text-zinc-500">15</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Row 2-4 (Left): Current Slide Preview -->
+    <main class="col-span-6 row-span-4 bg-black border border-white/5 rounded-2xl overflow-hidden relative flex flex-col">
+      <div class="bg-black/80 px-4 py-2 border-b border-white/5 text-xs font-semibold tracking-wider uppercase text-zinc-400 z-10 flex justify-between items-center">
+        <span>Current Slide (Audience Output)</span>
+        <span class="text-[10px] text-zinc-500">Live</span>
+      </div>
+      <!-- Reveal Container Mockup/Output -->
+      <div class="flex-1 w-full h-full relative" id="presenter-reveal-container">
+        <!-- Main Reveal Presentation container embedded directly for controls -->
+        <div class="reveal">
+          <div class="slides">
+            
+            <!-- Slide 1 -->
+            <section data-slide="1">
+              <aside class="notes">Welcome the principal and teachers. Introduce the presentation context.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/1.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 1" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 2 -->
+            <section data-slide="2" data-audio="/assets/Sounds/Slide 02 Audio.mp3">
+              <aside class="notes">Briefly mention the historical context of the Sri Lankan literary tradition.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/2.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 2" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 3 -->
+            <section data-slide="3" data-audio="/assets/Sounds/Slide 03 Audio.mp3">
+              <aside class="notes">Discuss classical poems and focus on local folklore and early prose styles.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/3.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 3" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 4 -->
+            <section data-slide="4">
+              <aside class="notes">Explain historical scrolls and their preservation formats.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/4.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 4" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 5 -->
+            <section data-slide="5">
+              <aside class="notes">Describe the Royal Court's literary appreciation gatherings.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/5.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 5" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 6 -->
+            <section data-slide="6" data-audio="/assets/Sounds/Slide 06 Audio.mp3">
+              <aside class="notes">This slide contains background music. Discuss the transition into mid-century prose.</aside>
+              <div class="slide-canvas">
+                <video data-src="/assets/6.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
+              </div>
+            </section>
+
+            <!-- Slide 7 -->
+            <section data-slide="7">
+              <aside class="notes">Highlight key verses from local masterpieces.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/7.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 7" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 8 -->
+            <section data-slide="8">
+              <aside class="notes">Introduce Guttila Kavyaya narrative and local themes.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/new_slide_8.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 8" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 9 -->
+            <section data-slide="9">
+              <aside class="notes">Guttila's competition scene. Play Audio 1 and Audio 2 as required during debate explanation.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/updated_8.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 9" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 10 -->
+            <section data-slide="10">
+              <aside class="notes">Examine the rhythmic verses and musical structures of the poems.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/new_slide_10.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 10" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 11 -->
+            <section data-slide="11">
+              <aside class="notes">Explain historical impacts on contemporary styles.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/10.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 11" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 12 -->
+            <section data-slide="12">
+              <aside class="notes">Play Slide 12 video and elaborate on the core visual narrative representation.</aside>
+              <div class="slide-canvas">
+                <video data-src="/assets/Slide 12 Video.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
+              </div>
+            </section>
+
+            <!-- Slide 13 -->
+            <section data-slide="13">
+              <aside class="notes">Discussion of slide 13. Play Slide 13 audio track panel when discussing the musical score.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/12.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 13" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 14 -->
+            <section data-slide="14">
+              <aside class="notes">Reflect on the collective works of classical creators.</aside>
+              <div class="slide-canvas">
+                <img src="/assets/13.png" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" alt="Slide 14" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </section>
+
+            <!-- Slide 15 -->
+            <section data-slide="15">
+              <aside class="notes">Conclusion and thanks. Allow questions and handle callbacks.</aside>
+              <div class="slide-canvas">
+                <video data-src="/assets/15.mp4" class="slide-bg absolute inset-0 w-full h-full object-contain z-0 gsap-scale-in" loop muted playsinline preload="none" onerror="this.style.display='none'"></video>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Row 2-4 (Right): Next Slide Preview -->
+    <aside class="col-span-3 row-span-4 bg-[#12121e] border border-white/5 rounded-2xl flex flex-col overflow-hidden relative">
+      <div class="bg-black/60 px-4 py-2 border-b border-white/5 text-xs font-semibold tracking-wider uppercase text-zinc-400 z-10 flex justify-between items-center">
+        <span>Next Slide Preview</span>
+        <span id="next-slide-indicator" class="text-[10px] text-zinc-500 font-mono">Slide 2</span>
+      </div>
+      <!-- Next Slide Display Portal -->
+      <div id="next-slide-preview-container" class="flex-1 w-full h-full relative bg-black flex items-center justify-center p-2">
+        <div id="next-preview-stage" class="w-full h-full relative flex items-center justify-center bg-zinc-900/40 rounded-lg overflow-hidden border border-white/5">
+          <span class="text-zinc-500 text-sm">No slide upcoming</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Row 2-6 (Far Right): Control Center / Speaker Notes -->
+    <aside class="col-span-3 row-span-5 bg-[#12121e] border border-white/5 rounded-2xl flex flex-col overflow-hidden relative">
+      <div class="bg-black/60 px-4 py-2.5 border-b border-white/5 text-xs font-semibold tracking-wider uppercase text-zinc-400 z-10">
+        Presentation Control Panel
+      </div>
+      <div class="flex-1 p-4 flex flex-col gap-4 overflow-y-auto">
+        <!-- Audio Controllers -->
+        <div class="bg-black/30 border border-white/5 rounded-xl p-3.5 flex flex-col gap-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-1">Speaker Audio Controls</h3>
+          
+          <!-- Slide 9 Dual Track Controls -->
+          <div class="flex flex-col gap-2 p-2.5 bg-white/5 border border-white/5 rounded-lg">
+            <span class="text-[11px] font-semibold text-zinc-300">Slide 09 (Guttila Debate)</span>
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <button id="btn-audio-guttila1" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-indigo-600 transition text-[11px] font-medium text-white shadow-md flex items-center justify-center gap-1.5">
+                ▶ Play 1
+              </button>
+              <button id="btn-audio-guttila2" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-indigo-600 transition text-[11px] font-medium text-white shadow-md flex items-center justify-center gap-1.5">
+                ▶ Play 2
+              </button>
+            </div>
+            <div id="guttila-audio-status" class="text-[10px] text-zinc-500 font-mono text-center mt-1">Stopped</div>
+          </div>
+          
+          <!-- Slide 13 Audio controls -->
+          <div class="flex flex-col gap-2 p-2.5 bg-white/5 border border-white/5 rounded-lg">
+            <span class="text-[11px] font-semibold text-zinc-300">Slide 13 Background</span>
+            <button id="btn-audio-slide13" class="w-full py-1.5 rounded-full bg-white/10 hover:bg-indigo-600 transition text-[11px] font-medium text-white shadow-md flex items-center justify-center gap-2">
+              ▶ Play Track
+            </button>
+            <div id="slide13-audio-status" class="text-[10px] text-zinc-500 font-mono text-center">Stopped</div>
+          </div>
+        </div>
+
+        <!-- Speaker Notes -->
+        <div class="flex-1 bg-black/40 border border-white/5 rounded-xl p-4 flex flex-col overflow-hidden">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2 block">Speaker Notes</span>
+          <div id="notes-content" class="flex-1 overflow-y-auto text-sm text-zinc-300 leading-relaxed font-sans scrollbar-thin">
+            No notes available.
+          </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Help -->
+        <div class="bg-black/30 border border-white/5 rounded-xl p-3 text-[11px] text-zinc-500 font-sans leading-relaxed">
+          <span class="font-bold text-zinc-400 block mb-1">Shortcuts:</span>
+          Left Arrow / Space / Right Arrow to navigate. Backstage sync updates display.html instantly.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Row 5-6 (Left / Mid): Manual Dashboard Controls -->
+    <footer class="col-span-9 row-span-1 bg-[#12121e]/80 border border-white/5 rounded-2xl flex items-center justify-between px-6 backdrop-blur-xl">
+      <!-- Navigation controls -->
+      <div class="flex items-center gap-3">
+        <button id="btn-prev" class="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white font-medium border border-white/10 transition flex items-center gap-2">
+          ← Previous
+        </button>
+        <button id="btn-next" class="px-6 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
+          Next Slide →
+        </button>
+      </div>
+
+      <!-- Quick status management -->
+      <div class="flex items-center gap-3">
+        <button id="btn-first" class="px-3.5 py-1.5 text-xs rounded-lg bg-black/40 hover:bg-white/10 text-zinc-400 transition">First</button>
+        <button id="btn-last" class="px-3.5 py-1.5 text-xs rounded-lg bg-black/40 hover:bg-white/10 text-zinc-400 transition">Last</button>
+        <div class="w-px h-6 bg-white/10 mx-2"></div>
+        <button id="btn-mute" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition text-zinc-300">
+          🔊 Unmuted
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="/presenter.js"></script>
+</body>
+</html>

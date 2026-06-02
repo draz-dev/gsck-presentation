@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base presentation layout styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  overflow: hidden;
+}
+
+.reveal,
+.slides,
+.reveal .slides section {
+  width: 100%;
+  height: 100%;
+}
+
+.slides {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GPU Accelerated Slide Media Backgrounds spanning edge-to-edge safely */
+.slide-bg {
+  object-fit: contain !important; /* Projector එකේ ලෝගෝ නොකැපී පෙනීමට */
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* FOUC (Flash of Un-animated Content) protection rules for slide layers (enabled only when JS is loaded) */
+.js-ready .gsap-fade {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.js-ready .gsap-slide-up {
+  opacity: 0;
+  transform: translate3d(0, 45px, 0);
+  will-change: transform, opacity;
+}
+
+.js-ready .gsap-slide-down {
+  opacity: 0;
+  transform: translate3d(0, -45px, 0);
+  will-change: transform, opacity;
+}
+
+.js-ready .gsap-slide-left {
+  opacity: 0;
+  transform: translate3d(45px, 0, 0);
+  will-change: transform, opacity;
+}
+
+.js-ready .gsap-slide-right {
+  opacity: 0;
+  transform: translate3d(-45px, 0, 0);
+  will-change: transform, opacity;
+}
+
+.js-ready .gsap-scale-in {
+  opacity: 0;
+  transform: scale(0.94) translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+/* Component layers for reusable premium styling */
+@layer components {
+  .bg-presentation-panel {
+    background-color: rgba(12, 12, 18, 0.55);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .border-presentation-border {
+    border-color: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* Custom dynamic indicators dot track */
+.indicator-dot {
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, width, background-color;
+  transform: translate3d(0, 0, 0);
+}
+
+.indicator-dot:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.25) translate3d(0, 0, 0);
+}
+
+.indicator-dot.active {
+  background-color: #6366f1;
+  width: 32px;
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
+}
+
+/* Global scrollbar hiding for presentation deck focus */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Ensure slide canvases match their sections and cover full viewport */
+.slide-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Presenter dashboard custom overrides */
+#presenter-reveal-container .reveal {
+  background-color: #000;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Scrollbar styling for Speaker Notes panel */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Clean scaling for Next Slide preview panel */
+#next-preview-stage section {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #000 !important;
+  transform: none !important;
+  left: 0 !important;
+  top: 0 !important;
+  opacity: 1 !important;
+}
+
+#next-preview-stage .slide-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#next-preview-stage .slide-bg {
+  object-fit: contain !important;
+  opacity: 1 !important;
+  transform: none !important;
+}

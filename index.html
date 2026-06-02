@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#050508]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerPoint Presenter Hub</title>
+  <meta name="description" content="Dual-Screen Reveal.js Presentation Console Dashboard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.ico" />
+</head>
+<body class="h-full overflow-hidden text-white font-sans selection:bg-indigo-500/30 selection:text-white select-none">
+
+  <!-- Ambient Background Blobs for Visual Depth -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/10 blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-violet-900/10 blur-[120px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+  </div>
+
+  <!-- Main Portal Hub UI -->
+  <div class="fixed inset-0 w-screen h-screen flex flex-col justify-center items-center bg-[#050508]/80 backdrop-blur-md z-[10] transition-opacity duration-500">
+    <div class="bg-presentation-panel backdrop-blur-xl border border-presentation-border p-10 md:p-14 rounded-3xl shadow-2xl flex flex-col items-center gap-6 max-w-xl text-center mx-4">
+      <div class="w-16 h-16 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tight font-sans">PowerPoint Presenter Hub</h1>
+      <p class="text-sm text-zinc-400 leading-relaxed">Choose a screen configuration to launch. Place the Audience view onto the projector monitor and run the Presenter view console on your laptop.</p>
+      
+      <!-- Launch buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 mt-6 w-full">
+        <a href="/display" target="_blank" class="flex-1 px-6 py-3.5 bg-zinc-800 hover:bg-zinc-700 hover:scale-[1.02] border border-white/10 active:scale-95 text-white font-semibold rounded-full shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+          📺 Open Audience View
+        </a>
+        <a href="/presenter" target="_blank" class="flex-1 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 hover:scale-[1.02] active:scale-95 text-white font-semibold rounded-full shadow-lg shadow-indigo-600/25 transition-all duration-300 flex items-center justify-center gap-2">
+          💼 Open Presenter View
+        </a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
