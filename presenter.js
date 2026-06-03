@@ -34,11 +34,23 @@ function playAudio(track) {
   updateAudioButtonStates();
 }
 
-function stopAll() {
+function stopAll(activeSlide) {
   guttila1Playing = false;
   guttila2Playing = false;
   slide13Playing = false;
   updateAudioButtonStates();
+
+  // Reset all iframes that are NOT inside the active slide to stop background playback
+  const allIframes = document.querySelectorAll('iframe');
+  allIframes.forEach(iframe => {
+    if (!activeSlide || !activeSlide.contains(iframe)) {
+      const src = iframe.src;
+      if (src && src !== 'about:blank') {
+        iframe.src = '';
+        iframe.src = src;
+      }
+    }
+  });
 }
 
 function updateAudioButtonStates() {
@@ -260,7 +272,7 @@ function init() {
     console.log(`[Presenter Console] Slide changed locally: ${event.indexh}`);
     
     playInnerAnimations(event.currentSlide);
-    stopAll();
+    stopAll(event.currentSlide);
     socket.emit("audio-control", { action: "stopAll" });
 
     updatePresenterConsole(event.currentSlide);

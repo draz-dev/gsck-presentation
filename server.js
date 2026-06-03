@@ -54,9 +54,14 @@ app.get('/display', (req, res) => {
   res.sendFile(join(__dirname, 'dist', 'display.html'));
 });
 
-// Explicitly avoid wildcard app.get("*") to prevent Express 5 routing crashes
-app.use((req, res) => {
+// Serve index.html only for actual page routes, not API/asset requests
+app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
+});
+
+// Return 404 for unmatched requests (don't serve HTML for asset requests)
+app.use((req, res) => {
+  res.status(404).send('Not Found');
 });
 
 const PORT = process.env.PORT || 3000;

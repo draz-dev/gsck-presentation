@@ -29,7 +29,7 @@ function getCustomAudio(track) {
   return customAudioCache[track];
 }
 
-function stopAllAudio() {
+function stopAllAudio(activeSlide) {
   if (currentBgAudio) {
     currentBgAudio.onended = null; // Clear auto-transition listener
     currentBgAudio.pause();
@@ -39,6 +39,14 @@ function stopAllAudio() {
   Object.values(customAudioCache).forEach(audio => {
     audio.pause();
     audio.currentTime = 0;
+  });
+
+  // Clear all iframes that are NOT inside the active slide to stop background playback
+  const allIframes = document.querySelectorAll('iframe');
+  allIframes.forEach(iframe => {
+    if (!activeSlide || !activeSlide.contains(iframe)) {
+      iframe.src = '';
+    }
   });
 }
 
@@ -53,7 +61,7 @@ function playInnerAnimations(slide) {
   }
 
   // Handle slide audio
-  stopAllAudio();
+  stopAllAudio(slide);
   const audioSrc = slide.getAttribute('data-audio');
   if (audioSrc) {
     if (!audioCache[audioSrc]) {
@@ -76,6 +84,14 @@ function playInnerAnimations(slide) {
     currentBgAudio.play().catch(e => {
       console.warn('[Audience Audio] Autoplay blocked (requires interaction):', e);
     });
+  }
+
+  // Handle active slide iframe loading
+  const iframe = slide.querySelector('iframe');
+  if (iframe) {
+    if (!iframe.src && iframe.dataset.src) {
+      iframe.src = iframe.dataset.src;
+    }
   }
 
   const video = slide.querySelector('video');
@@ -214,7 +230,7 @@ function init() {
     console.log(`[Audience View] Audio Control event: ${action}`, data);
 
     if (action === "play") {
-      stopAllAudio();
+      stopAllAudio(Reveal.getCurrentSlide());
       const audio = getCustomAudio(track);
       if (audio) {
         audio.muted = isMuted;
@@ -229,7 +245,7 @@ function init() {
         audio.currentTime = 0;
       }
     } else if (action === "stopAll") {
-      stopAllAudio();
+      stopAllAudio(Reveal.getCurrentSlide());
     } else if (action === "mute") {
       isMuted = value;
       // Mute custom audios
